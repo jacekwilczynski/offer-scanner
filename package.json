@@ -13,7 +13,8 @@
         "watch": "webpack --watch"
     },
     "dependencies": {
-        "redis": "^4.6.10"
+        "redis": "^4.6.10",
+        "zod": "^3.22.2"
     },
     "devDependencies": {
         "@babel/core": "^7.22.20",

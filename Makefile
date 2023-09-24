@@ -1,16 +1,15 @@
-all: build start shell
+all: build start
 
 anew: clean all
 
 build:
 	docker compose build
-	docker compose run node yarn install
 
 clean:
 	docker compose down --remove-orphans --rmi all --volumes
 	rm -rf dist node_modules
 
-restart: stop start
+restart: stop start shell
 
 shell:
 	@echo "\nRun 'node dist/refresh' to check for new offers. Check the 'dist' directory for more commands.\n"
@@ -18,6 +17,7 @@ shell:
 
 start:
 	docker compose up --detach
+	make shell
 
 stop:
-	docker compose down
+	docker compose down --remove-orphans

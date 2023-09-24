@@ -1,13 +1,20 @@
-const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const fs = require('fs');
+const path = require('path');
 
 const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
-    entry: {
-        'refresh': './src/refresh.ts',
-        'clear-cache': './src/clear-cache.ts',
-    },
+    entry: fs
+        .readdirSync(path.resolve('src'), 'utf8')
+        .filter(n => n.endsWith('.ts'))
+        .reduce(
+            (map, n) => ({
+                ...map,
+                [n.replace(/\.ts$/, '')]: path.resolve('src', n),
+            }),
+            {},
+        ),
     output: {
         path: path.resolve('dist'),
     },

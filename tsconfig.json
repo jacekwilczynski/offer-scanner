@@ -6,8 +6,10 @@
         "moduleResolution": "node",
         "noEmit": true,
         "noUncheckedIndexedAccess": true,
+        "skipLibCheck": true,
         "strict": true,
         "target": "esnext"
     },
-    "include": ["src"]
+    "include": ["."],
+    "exclude": ["node_modules"]
 }

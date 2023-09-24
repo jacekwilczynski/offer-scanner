@@ -1,0 +1,27 @@
+{
+    "name": "offer-scanner",
+    "version": "0.0.1",
+    "author": {
+        "name": "Jacek Wilczyński",
+        "email": "jacekwilczynski5@gmail.com"
+    },
+    "license": "ISC",
+    "type": "commonjs",
+    "scripts": {
+        "build": "webpack",
+        "test": "tsc",
+        "watch": "webpack --watch"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@babel/core": "^7.22.20",
+        "@babel/preset-env": "^7.22.20",
+        "@babel/preset-typescript": "^7.22.15",
+        "@types/node": "^20.6.4",
+        "babel-loader": "^9.1.3",
+        "clean-webpack-plugin": "^4.0.0",
+        "typescript": "^5.2.2",
+        "webpack": "^5.88.2",
+        "webpack-cli": "^5.1.4"
+    }
+}

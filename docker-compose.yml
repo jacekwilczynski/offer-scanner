@@ -1,0 +1,9 @@
+services:
+    node:
+        build:
+            context: .
+        environment:
+            NODE_ENV: development
+        volumes:
+            - .:/app
+        command: ['yarn', 'watch']

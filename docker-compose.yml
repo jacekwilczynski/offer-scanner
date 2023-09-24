@@ -3,7 +3,12 @@ services:
         build:
             context: .
         environment:
+            HTTP_CLIENT_CACHE: 1
             NODE_ENV: development
+            REDIS_URL: redis://redis:6379
         volumes:
             - .:/app
         command: ['yarn', 'watch']
+
+    redis:
+        image: redis:7.2.1-alpine3.18

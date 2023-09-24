@@ -12,7 +12,9 @@
         "test": "tsc",
         "watch": "webpack --watch"
     },
-    "dependencies": {},
+    "dependencies": {
+        "redis": "^4.6.10"
+    },
     "devDependencies": {
         "@babel/core": "^7.22.20",
         "@babel/preset-env": "^7.22.20",

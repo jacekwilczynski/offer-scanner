@@ -6,6 +6,7 @@ const isDev = process.env.NODE_ENV === 'development';
 module.exports = {
     entry: {
         'refresh': './src/refresh.ts',
+        'clear-cache': './src/clear-cache.ts',
     },
     output: {
         path: path.resolve('dist'),

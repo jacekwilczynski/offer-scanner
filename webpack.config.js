@@ -40,6 +40,7 @@ module.exports = {
     resolve: {
         alias: {
             src: path.resolve('src'),
+            'drizzle.config': path.resolve('drizzle.config.ts'),
         },
         extensions: ['.js', '.ts'],
     },

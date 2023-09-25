@@ -3,9 +3,9 @@ services:
         build:
             context: .
         environment:
+            DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
             HTTP_CLIENT_CACHE: 1
             NODE_ENV: development
-            DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
             PROJECT_DIR: /app
             REDIS_URL: redis://redis:6379
         volumes:

@@ -16,7 +16,7 @@ restart: stop start shell
 
 shell:
 	@echo "\n${GREEN}Run 'yarn app:refresh' to check for new offers. Check package.json for more commands.${RESET}\n"
-	docker compose exec node sh
+	docker compose exec node sh || docker compose logs
 
 start:
 	@if [ ! -f .env ]; then cp .env.dist .env; echo "${GREEN}Created a .env file for you to customize.${RESET}"; fi

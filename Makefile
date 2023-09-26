@@ -1,3 +1,6 @@
+RESET=\033[0m
+GREEN=\033[0;32m
+
 all: build start
 
 anew: clean all
@@ -12,10 +15,11 @@ clean:
 restart: stop start shell
 
 shell:
-	@echo "\nRun 'node dist/refresh' to check for new offers. Check the 'dist' directory for more commands.\n"
+	@echo "\n${GREEN}Run 'node dist/refresh' to check for new offers. Check the 'dist' directory for more commands.${RESET}\n"
 	docker compose exec node sh
 
 start:
+	@if [ ! -f .env ]; then cp .env.dist .env; echo "${GREEN}Created a .env file for you to customize.${RESET}"; fi
 	docker compose up --detach
 	make shell
 

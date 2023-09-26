@@ -3,7 +3,11 @@ services:
         build:
             context: .
         environment:
-            DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+            DB_HOST: postgres
+            DB_PORT: 5432
+            DB_USER: postgres
+            DB_PASS: postgres
+            DB_NAME: postgres
             HTTP_CLIENT_CACHE: 1
             NODE_ENV: development
             PROJECT_DIR: /app

@@ -2,6 +2,6 @@
 set -e
 
 yarn install --frozen-lockfile
-yarn drizzle-kit push:pg
+yarn orm:sync
 
 exec "$(dirname "$0")/docker-entrypoint.sh" "$@"

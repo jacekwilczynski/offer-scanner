@@ -15,7 +15,7 @@ clean:
 restart: stop start shell
 
 shell:
-	@echo "\n${GREEN}Run 'node dist/refresh' to check for new offers. Check the 'dist' directory for more commands.${RESET}\n"
+	@echo "\n${GREEN}Run 'yarn app:refresh' to check for new offers. Check package.json for more commands.${RESET}\n"
 	docker compose exec node sh
 
 start:

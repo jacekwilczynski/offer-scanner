@@ -5,7 +5,7 @@ import { Cache } from 'src/cache/Cache';
 import { CachedHttpClient } from 'src/http-client/CachedHttpClient';
 import { env } from 'src/init/env';
 import { HttpClient } from 'src/http-client/HttpClient';
-import postgres from 'postgres';
+import * as postgres from 'postgres';
 
 export const cache = new Cache(redis.createClient({ url: env.REDIS_URL }));
 

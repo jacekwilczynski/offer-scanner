@@ -1,4 +1,4 @@
-import { cache } from 'src/init/services';
+import { cache } from 'src/services';
 
 (async function () {
     await cache.clear();

@@ -1,4 +1,4 @@
-import { env } from 'src/init/env';
+import { env } from 'src/services/env';
 import * as redis from 'redis';
 import { PrismaClient } from '@prisma/client';
 import { Cache } from 'src/cache/Cache';

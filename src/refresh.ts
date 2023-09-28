@@ -1,4 +1,4 @@
-import { prisma } from 'src/init/services';
+import { prisma } from 'src/services';
 import * as util from 'util';
 
 (async function () {

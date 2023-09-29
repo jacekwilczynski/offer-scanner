@@ -16,15 +16,17 @@ model Listing {
     id        Int      @id @default(autoincrement())
     url       String   @unique
     offers    Offer[]
+    isWatched Boolean  @default(true)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model Offer {
-    id        Int       @id @default(autoincrement())
-    url       String    @unique
-    title     String
-    listings  Listing[]
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
+    id              Int       @id @default(autoincrement())
+    url             String    @unique
+    title           String
+    listings        Listing[]
+    notifiedAboutAt DateTime?
+    importedAt      DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
 }

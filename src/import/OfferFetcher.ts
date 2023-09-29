@@ -1,19 +1,19 @@
 import { Offer } from 'src/model/Offer';
+import { OfferSource } from 'src/import/sources/OfferSource';
 
-export interface OfferFetcher {
-    fetchOffers(url: string): Promise<Offer[]>;
-}
-
-export abstract class OfferSource implements OfferFetcher {
-    abstract supports(url: string): boolean
-
-    fetchOffers(url: string): Promise<Offer[]> {
-        if (!this.supports(url)) {
-            throw new Error(`URL ${url} not supported by ${this.constructor.name}.`);
-        }
-
-        return this._fetchOffers(url);
+export class OfferFetcher {
+    constructor(
+        private readonly sources: OfferSource[],
+    ) {
     }
 
-    protected abstract _fetchOffers(url: string): Promise<Offer[]>
+    fetchOffers(url: string): Promise<Offer[]> {
+        for (const source of this.sources) {
+            if (source.supports(url)) {
+                return source.fetchOffers(url);
+            }
+        }
+
+        throw new Error(`URL ${url} is not supported.`);
+    }
 }

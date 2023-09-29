@@ -1,15 +1,22 @@
 import { Offer } from 'src/model/Offer';
 
 export abstract class OfferSource {
-    abstract supports(url: string): boolean
+    protected abstract _fetchOffers(listingUrl: string): Promise<Offer[]>
 
-    fetchOffers(url: string): Promise<Offer[]> {
-        if (!this.supports(url)) {
-            throw new Error(`URL ${url} not supported by ${this.constructor.name}.`);
+    abstract supports(listingUrl: string): boolean
+
+    fetchOffers(listingUrl: string): Promise<Offer[]> {
+        if (!this.supports(listingUrl)) {
+            throw new Error(`URL ${listingUrl} not supported by ${this}.`);
         }
 
-        return this._fetchOffers(url);
+        return this._fetchOffers(listingUrl);
     }
 
-    protected abstract _fetchOffers(url: string): Promise<Offer[]>
+    /**
+     * Used in error message if trying to fetch from unsupported URL.
+     */
+    toString(): string {
+        return this.constructor.name;
+    }
 }

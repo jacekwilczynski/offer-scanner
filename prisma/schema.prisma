@@ -3,6 +3,8 @@
 
 generator client {
     provider = "prisma-client-js"
+    // putting the client inside the project allows us to perform the rename refactoring on model properties in TypeScript
+    output   = "./client"
 }
 
 datasource db {

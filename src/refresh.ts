@@ -1,7 +1,9 @@
-import { prisma } from 'src/services';
 import * as util from 'util';
+import { services } from 'src/services';
 
 (async function () {
+    const prisma = await services.prisma();
+
     await prisma.offer.deleteMany();
     await prisma.listing.deleteMany();
 

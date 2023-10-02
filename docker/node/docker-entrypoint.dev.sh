@@ -2,6 +2,7 @@
 set -e
 
 yarn install
+yarn prisma generate
 
 dbConnectionAttemptsLeft=20
 until yarn prisma db push; do

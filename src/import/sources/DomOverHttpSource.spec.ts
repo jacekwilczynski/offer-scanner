@@ -9,11 +9,13 @@ describe(DomOverHttpSource.constructor.name, () => {
 
     const source = new DomOverHttpSource(
         httpClient,
-        urlRegex,
         {
-            wrapperSelector: '[data-cy="l-card"]',
-            linkSelector: 'a',
-            titleSelector: 'h6',
+            urlRegex,
+            selectors: {
+                wrapperSelector: '[data-cy="l-card"]',
+                linkSelector: 'a',
+                titleSelector: 'h6',
+            },
         },
     );
 

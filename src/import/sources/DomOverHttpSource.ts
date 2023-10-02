@@ -1,4 +1,4 @@
-import assert from 'assert';
+import * as assert from 'assert';
 import { JSDOM } from 'jsdom';
 import { OfferSource } from 'src/import/sources/OfferSource';
 import { Offer } from 'src/model/Offer';
@@ -7,20 +7,19 @@ import { HttpClient } from 'src/http-client/HttpClient';
 export class DomOverHttpSource extends OfferSource {
     constructor(
         private readonly httpClient: HttpClient,
-        private readonly urlRegex: RegExp,
-        private readonly selectors: OfferSelectors,
+        private readonly config: DomOverHttpSourceConfig,
     ) {
         super();
     }
 
     supports(url: string): boolean {
-        return this.urlRegex.test(url);
+        return this.config.urlRegex.test(url);
     }
 
     protected async _fetchOffers(listingUrl: string): Promise<Offer[]> {
         const schemeAndDomain = getUrlBase(listingUrl);
         const document = await this.loadDocument(listingUrl);
-        const offerWrappers = [...document.querySelectorAll(this.selectors.wrapperSelector)];
+        const offerWrappers = [...document.querySelectorAll(this.config.selectors.wrapperSelector)];
 
         return offerWrappers.map(wrapper => ({
             url: this.extractUrl(wrapper, schemeAndDomain),
@@ -35,7 +34,7 @@ export class DomOverHttpSource extends OfferSource {
     }
 
     private extractUrl(wrapper: Element, schemeAndDomain: string) {
-        const link = wrapper.querySelector(this.selectors.linkSelector);
+        const link = wrapper.querySelector(this.config.selectors.linkSelector);
         assert(link && 'href' in link && typeof link.href === 'string', 'Offer link not found.');
 
         return link.href.startsWith('/')
@@ -44,11 +43,16 @@ export class DomOverHttpSource extends OfferSource {
     }
 
     private extractTitle(wrapper: Element) {
-        const title = wrapper.querySelector(this.selectors.titleSelector)?.textContent;
+        const title = wrapper.querySelector(this.config.selectors.titleSelector)?.textContent;
         assert(title != null, 'Offer title not found.');
 
         return title;
     }
+}
+
+export type DomOverHttpSourceConfig = {
+    urlRegex: RegExp;
+    selectors: OfferSelectors;
 }
 
 export type OfferSelectors = {

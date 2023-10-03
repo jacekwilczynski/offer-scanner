@@ -1,19 +1,16 @@
 import { z } from 'zod';
 
-const baseSchema = z.object({
+const envSchema = z.object({
     DATABASE_URL: z.string().url(),
     HTTP_CLIENT_CACHE: z.string().optional().transform(v => v === '1'),
     PROJECT_DIR: z.string(),
     REDIS_URL: z.string().url(),
+    SINCH_URL: z.string().optional(),
+    SINCH_JWT: z.string().optional(),
+    SMS_FROM: z.string().optional(),
+    SMS_TO: z.string().optional(),
+    TWILIO_ACCOUNT_SID: z.string().optional(),
+    TWILIO_AUTH_TOKEN: z.string().optional(),
 });
-
-const smsConfigSchema = z.object({
-    SINCH_URL: z.string().url(),
-    SINCH_JWT: z.string(),
-    SMS_FROM: z.string(),
-    SMS_TO: z.string(),
-}).partial();
-
-const envSchema = baseSchema.merge(smsConfigSchema);
 
 export const env = envSchema.parse(process.env);

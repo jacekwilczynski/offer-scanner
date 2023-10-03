@@ -10,7 +10,7 @@ export class SinchSmsSender implements SmsSender {
     async send({ body, from, to }: Sms) {
         const requestData = { body, from, to: [to] };
 
-        console.debug('Sending SMS.', requestData);
+        console.debug('Sending SMS via sinch.', requestData);
 
         const response = await fetch(
             this.apiUrl,
@@ -28,6 +28,6 @@ export class SinchSmsSender implements SmsSender {
             throw new Error(await response.text());
         }
 
-        console.debug('SMS sent.', await response.json());
+        console.debug('SMS sent via Sinch.', await response.json());
     }
 }

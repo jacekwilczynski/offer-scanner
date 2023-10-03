@@ -16,6 +16,7 @@ import { SmsNotifier } from 'src/infrastructure/notifier/SmsNotifier';
 import * as config from 'src/dependency-injection/offer-sources';
 import { StdoutFakeSmsSender } from 'src/infrastructure/notifier/sms-sender/StdoutFakeSmsSender';
 import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
+import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSmsSender';
 
 let preShutdowns: Array<() => void> = [];
 
@@ -79,9 +80,11 @@ class Container {
     smsSender = shared(async () => {
         if (env.SINCH_URL && env.SINCH_JWT) {
             return new SinchSmsSender(env.SINCH_URL, env.SINCH_JWT);
+        } else if (env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN) {
+            return new TwilioSmsSender(require('twilio')(env.TWILIO_ACCOUNT_SID, env.TWILIO_AUTH_TOKEN));
+        } else {
+            return new StdoutFakeSmsSender();
         }
-
-        return new StdoutFakeSmsSender();
     });
 }
 

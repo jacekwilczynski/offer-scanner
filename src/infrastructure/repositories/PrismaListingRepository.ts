@@ -23,8 +23,7 @@ export class PrismaListingRepository implements ListingRepository {
                     },
                 },
             },
-            select: {
-                url: true,
+            include: {
                 offers: {
                     where: {
                         notifiedAboutAt: null,

@@ -1,6 +1,5 @@
-import { Offer as PrismaOffer, Prisma } from 'prisma/client';
-import OfferCreateInput = Prisma.OfferCreateInput;
+import { Prisma } from 'prisma/client';
 import { RequiredOnly } from 'src/utils/types';
+import OfferCreateInput = Prisma.OfferCreateInput;
 
-export type SavedOffer = PrismaOffer
 export type Offer = RequiredOnly<OfferCreateInput>

@@ -1,5 +1,5 @@
 import * as util from 'util';
-import { services } from 'src/infrastructure/dependency-injection';
+import { services } from 'src/dependency-injection';
 
 (async function () {
     const prisma = await services.prisma();

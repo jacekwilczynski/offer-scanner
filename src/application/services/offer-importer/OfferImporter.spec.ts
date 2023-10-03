@@ -2,9 +2,9 @@ import { mock } from 'jest-mock-extended';
 import { fromPartial } from 'src/utils/testing/types';
 import { SavedListing } from 'src/model/Listing';
 import { ListingRepository } from 'src/application/interfaces/ListingRepository';
-import { OfferFetcher } from 'src/application/services/OfferImporter/OfferFetcher';
+import { OfferFetcher } from 'src/application/services/offer-importer/OfferFetcher';
 import { Offer } from 'src/model/Offer';
-import { OfferImporter } from 'src/application/services/OfferImporter/OfferImporter';
+import { OfferImporter } from 'src/application/services/offer-importer/OfferImporter';
 
 describe(OfferImporter.name, () => {
     const listingRepository = mock<ListingRepository>();

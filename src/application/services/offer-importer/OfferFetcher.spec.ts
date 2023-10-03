@@ -1,7 +1,7 @@
 import { mock } from 'jest-mock-extended';
 import { fromPartial } from 'src/utils/testing/types';
-import { OfferFetcher } from 'src/application/services/OfferImporter/OfferFetcher';
-import { OfferSource } from 'src/application/services/OfferImporter/sources/OfferSource';
+import { OfferFetcher } from 'src/application/services/offer-importer/OfferFetcher';
+import { OfferSource } from 'src/application/services/offer-importer/sources/OfferSource';
 import { Offer } from 'src/model/Offer';
 
 describe(OfferFetcher.name, () => {

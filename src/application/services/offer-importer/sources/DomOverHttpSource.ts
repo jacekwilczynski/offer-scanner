@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import { JSDOM } from 'jsdom';
-import { OfferSource } from 'src/application/services/OfferImporter/sources/OfferSource';
+import { OfferSource } from 'src/application/services/offer-importer/sources/OfferSource';
 import { Offer } from 'src/model/Offer';
 import { HttpClient } from 'src/application/interfaces/HttpClient';
 

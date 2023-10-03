@@ -1,6 +1,6 @@
 import { Prisma } from 'prisma/client';
 import { useDatabase } from 'src/utils/testing/composables';
-import { services } from 'src/infrastructure/dependency-injection';
+import { services } from 'src/dependency-injection';
 import { PrismaListingRepository } from 'src/infrastructure/repositories/PrismaListingRepository';
 
 const prisma = useDatabase();

@@ -1,5 +1,5 @@
 import { ListingRepository } from 'src/application/interfaces/ListingRepository';
-import { OfferFetcher } from 'src/application/services/OfferImporter/OfferFetcher';
+import { OfferFetcher } from 'src/application/services/offer-importer/OfferFetcher';
 
 export class OfferImporter {
     constructor(

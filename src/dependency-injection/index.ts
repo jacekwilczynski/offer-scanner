@@ -1,7 +1,7 @@
 import * as redis from 'redis';
 import { PrismaClient } from 'prisma/client';
-import { shared } from 'src/infrastructure/dependency-injection/di-utils';
-import { env } from 'src/infrastructure/dependency-injection/env';
+import { shared } from 'src/dependency-injection/di-utils';
+import { env } from 'src/dependency-injection/env';
 import { Cache } from 'src/infrastructure/cache/Cache';
 import { HttpClient } from 'src/application/interfaces/HttpClient';
 import { CachedHttpClient } from 'src/infrastructure/http-client/CachedHttpClient';

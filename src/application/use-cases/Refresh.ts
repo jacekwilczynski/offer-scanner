@@ -1,4 +1,4 @@
-import { OfferImporter } from 'src/application/services/OfferImporter/OfferImporter';
+import { OfferImporter } from 'src/application/services/offer-importer/OfferImporter';
 import { ListingRepository } from 'src/application/interfaces/ListingRepository';
 import { Notifier } from 'src/application/interfaces/Notifier';
 

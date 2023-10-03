@@ -1,5 +1,5 @@
 import { mock } from 'jest-mock-extended';
-import { OfferImporter } from 'src/application/services/OfferImporter/OfferImporter';
+import { OfferImporter } from 'src/application/services/offer-importer/OfferImporter';
 import { ListingRepository } from 'src/application/interfaces/ListingRepository';
 import { Notifier } from 'src/application/interfaces/Notifier';
 import { Refresh } from 'src/application/use-cases/Refresh';

@@ -1,19 +1,15 @@
 import { mock } from 'jest-mock-extended';
-import { fromPartial } from 'src/utils/testing/testing';
-import { OfferImporter } from 'src/application/OfferImporter/OfferImporter';
+import { fromPartial } from 'src/utils/testing/types';
 import { SavedListing } from 'src/model/Listing';
-import { OfferFetcher } from 'src/application/OfferImporter/OfferFetcher';
-import { Offer } from 'src/model/Offer';
 import { ListingRepository } from 'src/application/interfaces/ListingRepository';
+import { OfferFetcher } from 'src/application/services/OfferImporter/OfferFetcher';
+import { Offer } from 'src/model/Offer';
+import { OfferImporter } from 'src/application/services/OfferImporter/OfferImporter';
 
 describe(OfferImporter.name, () => {
     const listingRepository = mock<ListingRepository>();
     const offerFetcher = mock<OfferFetcher>();
-
-    const offerImporter = new OfferImporter(
-        listingRepository,
-        offerFetcher,
-    );
+    const offerImporter = new OfferImporter(listingRepository, offerFetcher);
 
     it('should do nothing if no watched listings', async () => {
         // given

@@ -1,9 +1,9 @@
 import { mock } from 'jest-mock-extended';
 import { HttpClient } from 'src/application/interfaces/HttpClient';
-import { DomOverHttpSource } from 'src/application/OfferImporter/sources/DomOverHttpSource';
+import { DomOverHttpSource } from 'src/application/services/OfferImporter/sources/DomOverHttpSource';
 import { Offer } from 'src/model/Offer';
 
-describe(DomOverHttpSource.constructor.name, () => {
+describe(DomOverHttpSource.name, () => {
     const httpClient = mock<HttpClient>();
     const urlRegex = new RegExp('^https://olx.pl/');
 

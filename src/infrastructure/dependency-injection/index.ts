@@ -6,6 +6,7 @@ import { HttpClient } from 'src/application/interfaces/HttpClient';
 import { CachedHttpClient } from 'src/infrastructure/http-client/CachedHttpClient';
 import { RealHttpClient } from 'src/infrastructure/http-client/RealHttpClient';
 import { shared } from 'src/infrastructure/dependency-injection/di-utils';
+import { PrismaListingRepository } from 'src/infrastructure/repositories/PrismaListingRepository';
 
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
@@ -18,6 +19,8 @@ class Container {
 
         return httpClient;
     });
+
+    listingRepository = shared(async () => new PrismaListingRepository(await this.prisma()));
 
     prisma = shared(async () => new PrismaClient());
 

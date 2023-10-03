@@ -21,12 +21,68 @@ describe(PrismaListingRepository.name, () => {
         );
 
         // when
-        const retrievedListings = await listingRepository.findAllWatched();
+        const listings = await listingRepository.findAllWatched();
 
         // then
-        expect(retrievedListings).toHaveLength(2);
-        expect(retrievedListings[0]!).toHaveProperty('url', 'https://abc.com');
-        expect(retrievedListings[1]!).toHaveProperty('url', 'https://ghi.com');
+        expect(listings).toHaveLength(2);
+        expect(listings[0]!).toHaveProperty('url', 'https://abc.com');
+        expect(listings[1]!).toHaveProperty('url', 'https://ghi.com');
+    });
+
+    it('can find all watched listings with new offers', async () => {
+        // given
+        await theFollowingListings(
+            {
+                url: 'https://unwatched-with-new-offers.com',
+                isWatched: false,
+                offers: {
+                    create: [{
+                        url: 'https://unwatched-with-new-offers.com/one',
+                        title: 'New offer in unwatched listing',
+                    }],
+                },
+            },
+            {
+                url: 'https://watched-with-new-offers.com',
+                isWatched: true,
+                offers: {
+                    create: [
+                        {
+                            url: 'https://watched-with-new-offers.com/old-offer',
+                            title: 'Old offer in watched listing that has new offers',
+                            notifiedAboutAt: new Date(),
+                        },
+                        {
+                            url: 'https://watched-with-new-offers.com/new-offer',
+                            title: 'New offer in watched listing',
+                        },
+                    ],
+                },
+            },
+            {
+                url: 'https://watched-without-new-offers.com',
+                isWatched: true,
+                offers: {
+                    create: [
+                        {
+                            url: 'https://watched-without-new-offers.com/old-offer',
+                            title: 'Old offer in watched listing that does not have new offers',
+                            notifiedAboutAt: new Date(),
+                        },
+                    ],
+                },
+            },
+        );
+
+        // when
+        const listings = await listingRepository.findAllWatchedWithNewOffers();
+
+        // then
+        expect(listings).toHaveLength(1);
+        expect(listings[0]!).toHaveProperty('url', 'https://watched-with-new-offers.com');
+        expect(listings[0]!.offers).toHaveLength(1);
+        expect(listings[0]!.offers[0]!).toHaveProperty('url', 'https://watched-with-new-offers.com/new-offer');
+        expect(listings[0]!.offers[0]!).toHaveProperty('title', 'New offer in watched listing');
     });
 
     it('can add new offers to existing listing', async () => {
@@ -73,8 +129,10 @@ describe(PrismaListingRepository.name, () => {
     });
 });
 
-async function theFollowingListings(...data: Prisma.ListingCreateInput[]) {
-    await prisma.listing.createMany({ data });
+async function theFollowingListings(...listings: Prisma.ListingCreateInput[]) {
+    for (const listing of listings) {
+        await prisma.listing.create({ data: listing });
+    }
 }
 
 function findAllListings() {

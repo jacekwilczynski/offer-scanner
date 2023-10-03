@@ -1,6 +1,6 @@
 import { PrismaClient } from 'prisma/client';
 import { Offer } from 'src/model/Offer';
-import { Listing, SavedListing } from 'src/model/Listing';
+import { Listing } from 'src/model/Listing';
 import { ListingRepository } from 'src/application/interfaces/ListingRepository';
 
 export class PrismaListingRepository implements ListingRepository {
@@ -9,11 +9,32 @@ export class PrismaListingRepository implements ListingRepository {
     ) {
     }
 
-    findAllWatched(): Promise<SavedListing[]> {
+    findAllWatched() {
         return this.prisma.listing.findMany({ where: { isWatched: true } });
     }
 
-    async addOffers(listing: Listing, offers: Offer[]): Promise<void> {
+    findAllWatchedWithNewOffers() {
+        return this.prisma.listing.findMany({
+            where: {
+                isWatched: true,
+                offers: {
+                    some: {
+                        notifiedAboutAt: null,
+                    },
+                },
+            },
+            select: {
+                url: true,
+                offers: {
+                    where: {
+                        notifiedAboutAt: null,
+                    },
+                },
+            },
+        });
+    }
+
+    async addOffers(listing: Listing, offers: Offer[]) {
         await this.prisma.listing.update({
             where: { url: listing.url },
             data: {

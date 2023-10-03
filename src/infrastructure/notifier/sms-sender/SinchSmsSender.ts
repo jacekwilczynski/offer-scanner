@@ -7,20 +7,21 @@ export class SinchSmsSender implements SmsSender {
     ) {
     }
 
-    async send(sms: Sms) {
+    async send({ body, from, to }: Sms) {
         const response = await fetch(
             this.apiUrl,
             {
+                body: JSON.stringify({ body, from, to: [to] }),
                 headers: {
                     'Authorization': `Bearer ${this.jwt}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(sms),
+                method: 'POST',
             },
         );
 
         if (!response.ok) {
-            throw new Error()
+            throw new Error(await response.text());
         }
     }
 }

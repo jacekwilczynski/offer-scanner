@@ -11,7 +11,7 @@
         "app:clear-cache": "yarn ts-node -T src/clear-cache.ts",
         "app:load-fixtures": "yarn ts-node -T src/load-fixtures.ts",
         "app:refresh": "yarn ts-node -T src/refresh.ts",
-        "test": "tsc && jest"
+        "test": "tsc && jest --runInBand"
     },
     "dependencies": {
         "@prisma/client": "5.3.1",

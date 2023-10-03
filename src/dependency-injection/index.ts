@@ -15,6 +15,7 @@ import { SinchSmsSender } from 'src/infrastructure/notifier/sms-sender/SinchSmsS
 import { SmsNotifier } from 'src/infrastructure/notifier/SmsNotifier';
 import * as config from 'src/dependency-injection/offer-sources';
 import { StdoutFakeSmsSender } from 'src/infrastructure/notifier/sms-sender/StdoutFakeSmsSender';
+import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
 
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
@@ -52,6 +53,10 @@ class Container {
         await this.listingRepository(),
         await this.offerFetcher(),
     ));
+
+    offerRepository = shared(async () =>
+        new PrismaOfferRepository(await this.prisma()),
+    );
 
     prisma = shared(async () => new PrismaClient());
 

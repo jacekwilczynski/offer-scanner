@@ -1,5 +1,10 @@
-import { SavedListingWithOffers } from 'src/model/Listing';
+import { Offer } from 'src/model/Offer';
 
 export interface Notifier {
-    notifyAboutNewOffers(listing: SavedListingWithOffers[]): Promise<void>;
+    notifyAboutNewOffers(listings: ListingToNotifyAbout[]): Promise<void>;
+}
+
+export type ListingToNotifyAbout = {
+    url: string;
+    offers: Offer[];
 }

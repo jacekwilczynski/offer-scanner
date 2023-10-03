@@ -17,6 +17,8 @@ import * as config from 'src/dependency-injection/offer-sources';
 import { StdoutFakeSmsSender } from 'src/infrastructure/notifier/sms-sender/StdoutFakeSmsSender';
 import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
 
+let preShutdowns: Array<() => void> = [];
+
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
 
@@ -60,12 +62,12 @@ class Container {
 
     prisma = shared(async () => new PrismaClient());
 
-    redisClient = shared(async () =>
-        // type assertion because the type appears to be correct
-        // - there were no errors when redisClient was inlined in the cache constructor call above,
-        // and there is no obvious alternative
-        redis.createClient({ url: env.REDIS_URL }) as redis.RedisClientType,
-    );
+    redisClient = shared(async () => {
+        const client: redis.RedisClientType = redis.createClient({ url: env.REDIS_URL });
+        preShutdowns.push(() => client.disconnect());
+
+        return client;
+    });
 
     refresh = shared(async () => new Refresh(
         await this.offerImporter(),
@@ -84,3 +86,19 @@ class Container {
 }
 
 export const services: Readonly<Container> = new Container();
+
+export async function runWithServices<TKeys extends keyof Container>(
+    keys: TKeys[],
+    callback: (services: { [K in TKeys]: Awaited<ReturnType<Container[K]>> }) => Promise<void>,
+) {
+    const entryPromises = keys.map(
+        async key => services[key]().then(service => [key, service]),
+    );
+
+    const entries = await Promise.all(entryPromises);
+    const servicesToInject = Object.fromEntries(entries);
+
+    await callback(servicesToInject);
+
+    await Promise.allSettled(preShutdowns.map(ps => ps()));
+}

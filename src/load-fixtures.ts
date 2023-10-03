@@ -1,7 +1,6 @@
-import { services } from 'src/dependency-injection';
+import { runWithServices } from 'src/dependency-injection';
 
-(async function () {
-    const prisma = await services.prisma();
+runWithServices(['prisma'], async ({ prisma }) => {
     await prisma.offer.deleteMany();
     await prisma.listing.deleteMany();
 
@@ -11,6 +10,4 @@ import { services } from 'src/dependency-injection';
             { url: 'https://www.otodom.pl/pl/wyniki/sprzedaz/mieszkanie/cala-polska?viewType=listing/' },
         ],
     });
-
-    process.exit();
-})();
+});

@@ -1,8 +1,3 @@
-import { services } from 'src/dependency-injection';
+import { runWithServices } from 'src/dependency-injection';
 
-(async function () {
-    const cache = await services.cache();
-    await cache.clear();
-    console.info('Cache cleared.');
-    process.exit();
-})();
+runWithServices(['cache'], ({ cache }) => cache.clear());

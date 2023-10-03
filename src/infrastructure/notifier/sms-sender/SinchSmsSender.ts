@@ -8,10 +8,14 @@ export class SinchSmsSender implements SmsSender {
     }
 
     async send({ body, from, to }: Sms) {
+        const requestData = { body, from, to: [to] };
+
+        console.debug('Sending SMS.', requestData);
+
         const response = await fetch(
             this.apiUrl,
             {
-                body: JSON.stringify({ body, from, to: [to] }),
+                body: JSON.stringify(requestData),
                 headers: {
                     'Authorization': `Bearer ${this.jwt}`,
                     'Content-Type': 'application/json',
@@ -23,5 +27,7 @@ export class SinchSmsSender implements SmsSender {
         if (!response.ok) {
             throw new Error(await response.text());
         }
+
+        console.debug('SMS sent.', await response.json());
     }
 }

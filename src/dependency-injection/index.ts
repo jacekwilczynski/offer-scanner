@@ -70,6 +70,7 @@ class Container {
     refresh = shared(async () => new Refresh(
         await this.offerImporter(),
         await this.listingRepository(),
+        await this.offerRepository(),
         await this.notifier(),
     ));
 

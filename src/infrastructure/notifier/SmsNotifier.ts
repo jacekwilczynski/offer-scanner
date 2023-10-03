@@ -12,21 +12,17 @@ export class SmsNotifier implements Notifier {
     }
 
     async notifyAboutNewOffers(listings: SavedListingWithOffers[]) {
-        let body = 'New offers!\n\n';
+        let body = 'New offers!';
 
-        body += listings
-            .flatMap(({ offers }) => {
-                const offerLines = offers
-                    .slice(0, SmsNotifier.MAX_OFFERS_PER_LISTING)
-                    .map(offer => `${offer.title}:\n${offer.url}`);
+        for (const listing of listings) {
+            for (const offer of listing.offers.slice(0, SmsNotifier.MAX_OFFERS_PER_LISTING)) {
+                body += `\n\n${offer.title}:\n${offer.url}`;
+            }
 
-                if (offers.length > SmsNotifier.MAX_OFFERS_PER_LISTING) {
-                    offerLines.push('... and more');
-                }
-
-                return offerLines;
-            })
-            .join('\n\n');
+            if (listing.offers.length > SmsNotifier.MAX_OFFERS_PER_LISTING) {
+                body += '\n\n... and more';
+            }
+        }
 
         await this.smsSender.send({ ...this.config, body });
     }

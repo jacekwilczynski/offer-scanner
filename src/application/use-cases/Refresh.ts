@@ -15,13 +15,22 @@ export class Refresh {
 
     async execute() {
         await this.offerImporter.import();
+
         const listings = await this.listingRepository.findAllWatchedWithNewOffers();
 
         if (listings.length === 0) {
+            console.debug('No new offers.');
             return;
         }
 
-        await this.notifier.notifyAboutNewOffers(listings);
+        const isFirstRun = !await this.offerRepository.hasAnyNotifiedAbout();
+        if (!isFirstRun) {
+            console.debug('Notifying about new listings.', listings);
+            await this.notifier.notifyAboutNewOffers(listings);
+        } else {
+            console.debug('First run - skipping notification.');
+        }
+
         await this.markNotified(listings);
     }
 

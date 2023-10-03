@@ -8,6 +8,12 @@ export class PrismaOfferRepository implements OfferRepository {
     ) {
     }
 
+    async hasAnyNotifiedAbout(): Promise<boolean> {
+        const count = await this.prisma.offer.count({ where: { notifiedAboutAt: { not: null } } });
+
+        return count > 0;
+    }
+
     async markNotified(...offers: Pick<Offer, 'url'>[]): Promise<void> {
         await this.prisma.offer.updateMany({
             data: { notifiedAboutAt: new Date() },

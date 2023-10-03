@@ -1,8 +1,9 @@
 import { useDatabase } from 'src/utils/testing/composables';
 import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
-import { Offer } from 'src/model/Offer';
 import { OfferRepository } from 'src/application/interfaces/OfferRepository';
 import { services } from 'src/dependency-injection';
+import { Prisma } from 'prisma/client';
+import OfferCreateInput = Prisma.OfferCreateInput;
 
 const prisma = useDatabase();
 
@@ -11,6 +12,16 @@ describe(PrismaOfferRepository.name, () => {
 
     beforeEach(async () => {
         offerRepository = await services.offerRepository();
+    });
+
+    it('can when there are offers with notifications', async () => {
+        await theFollowingOffers({ url: 'https://one.com/', title: 'one', notifiedAboutAt: new Date() });
+        expect(await offerRepository.hasAnyNotifiedAbout()).toBe(true);
+    });
+
+    it('can when there are no offers with notifications', async () => {
+        await theFollowingOffers({ url: 'https://one.com/', title: 'one' });
+        expect(await offerRepository.hasAnyNotifiedAbout()).toBe(false);
     });
 
     it('can record notification', async () => {
@@ -33,7 +44,7 @@ describe(PrismaOfferRepository.name, () => {
     });
 });
 
-async function theFollowingOffers(...offers: Offer[]) {
+async function theFollowingOffers(...offers: OfferCreateInput[]) {
     await prisma.offer.createMany({ data: offers });
 }
 

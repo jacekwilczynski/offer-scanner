@@ -1,11 +1,11 @@
-import { env } from 'src/services/env';
 import * as redis from 'redis';
 import { PrismaClient } from 'prisma/client';
-import { Cache } from 'src/cache/Cache';
-import { HttpClient } from 'src/http-client/HttpClient';
-import { CachedHttpClient } from 'src/http-client/CachedHttpClient';
-import { RealHttpClient } from 'src/http-client/RealHttpClient';
-import { shared } from 'src/services/di-utils';
+import { env } from 'src/infrastructure/dependency-injection/env';
+import { Cache } from 'src/infrastructure/cache/Cache';
+import { HttpClient } from 'src/application/interfaces/HttpClient';
+import { CachedHttpClient } from 'src/infrastructure/http-client/CachedHttpClient';
+import { RealHttpClient } from 'src/infrastructure/http-client/RealHttpClient';
+import { shared } from 'src/infrastructure/dependency-injection/di-utils';
 
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));

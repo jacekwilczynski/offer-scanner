@@ -1,4 +1,4 @@
-import { services } from 'src/services';
+import { services } from 'src/infrastructure/dependency-injection';
 
 (async function () {
     const cache = await services.cache();

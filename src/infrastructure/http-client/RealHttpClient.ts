@@ -1,4 +1,4 @@
-import { HttpClient } from 'src/http-client/HttpClient';
+import { HttpClient } from 'src/application/interfaces/HttpClient';
 
 export class RealHttpClient implements HttpClient {
     fetchText(url: string) {

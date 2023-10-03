@@ -1,5 +1,5 @@
-import { Cache } from 'src/cache/Cache';
-import { HttpClient } from 'src/http-client/HttpClient';
+import { Cache } from 'src/infrastructure/cache/Cache';
+import { HttpClient } from 'src/application/interfaces/HttpClient';
 
 /**
  * Decorator for development purposes, to reduce the number of requests to third party websites.

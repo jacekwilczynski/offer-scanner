@@ -1,6 +1,6 @@
 import { mock } from 'jest-mock-extended';
-import { HttpClient } from 'src/http-client/HttpClient';
-import { DomOverHttpSource } from 'src/import/sources/DomOverHttpSource';
+import { HttpClient } from 'src/application/interfaces/HttpClient';
+import { DomOverHttpSource } from 'src/application/OfferImporter/sources/DomOverHttpSource';
 import { Offer } from 'src/model/Offer';
 
 describe(DomOverHttpSource.constructor.name, () => {

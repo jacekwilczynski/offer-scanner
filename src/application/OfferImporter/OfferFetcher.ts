@@ -1,5 +1,5 @@
 import { Offer } from 'src/model/Offer';
-import { OfferSource } from 'src/import/sources/OfferSource';
+import { OfferSource } from 'src/application/OfferImporter/sources/OfferSource';
 
 export class OfferFetcher {
     constructor(

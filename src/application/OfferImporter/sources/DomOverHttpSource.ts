@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 import { JSDOM } from 'jsdom';
-import { OfferSource } from 'src/import/sources/OfferSource';
+import { OfferSource } from 'src/application/OfferImporter/sources/OfferSource';
 import { Offer } from 'src/model/Offer';
-import { HttpClient } from 'src/http-client/HttpClient';
+import { HttpClient } from 'src/application/interfaces/HttpClient';
 
 export class DomOverHttpSource extends OfferSource {
     constructor(

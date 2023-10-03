@@ -16,6 +16,11 @@ export class Refresh {
     async execute() {
         await this.offerImporter.import();
         const listings = await this.listingRepository.findAllWatchedWithNewOffers();
+
+        if (listings.length === 0) {
+            return;
+        }
+
         await this.notifier.notifyAboutNewOffers(listings);
         await this.markNotified(listings);
     }

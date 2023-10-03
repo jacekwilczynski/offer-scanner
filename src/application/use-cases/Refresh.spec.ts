@@ -14,7 +14,7 @@ describe(Refresh.name, () => {
     const notifier = mock<Notifier>();
     const refresh = new Refresh(offerImporter, listingRepository, offerRepository, notifier);
 
-    it('executes import and notifies about new offers', async () => {
+    it('should execute import and notify about new offers', async () => {
         // given
         const listings: SavedListingWithOffers[] = [
             fromPartial({
@@ -41,7 +41,7 @@ describe(Refresh.name, () => {
             }),
         ];
 
-        listingRepository.findAllWatchedWithNewOffers.mockImplementationOnce(() => Promise.resolve(listings));
+        listingRepository.findAllWatchedWithNewOffers.mockResolvedValueOnce(listings);
 
         // when
         await refresh.execute();
@@ -56,5 +56,17 @@ describe(Refresh.name, () => {
         expect(markNotifiedCall[0]).toHaveProperty('url', 'https://abc.com/one');
         expect(markNotifiedCall[1]).toHaveProperty('url', 'https://abc.com/two');
         expect(markNotifiedCall[2]).toHaveProperty('url', 'https://def.com/one');
+    });
+
+    it('should not notify if no new offers', async () => {
+        // given
+        listingRepository.findAllWatchedWithNewOffers.mockResolvedValueOnce([]);
+
+        // when
+        await refresh.execute();
+
+        // then
+        expect(notifier.notifyAboutNewOffers).not.toHaveBeenCalled();
+        expect(offerRepository.markNotified).not.toHaveBeenCalled();
     });
 });

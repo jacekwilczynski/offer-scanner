@@ -10,11 +10,11 @@ export class SmsNotifier implements Notifier {
     }
 
     async notifyAboutNewOffers(listings: SavedListingWithOffers[]) {
-        let body = 'New offers!';
+        let body = 'New offers!\n\n';
 
         body += listings.flatMap(({ offers }) =>
-            offers.map(offer => `${offer.title}: ${offer.url}`),
-        );
+            offers.map(offer => `${offer.title}:\n${offer.url}`),
+        ).join('\n\n');
 
         await this.smsSender.send({ ...this.config, body });
     }

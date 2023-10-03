@@ -12,9 +12,9 @@ describe(DomOverHttpSource.name, () => {
         {
             urlRegex,
             selectors: {
-                wrapperSelector: '[data-cy="l-card"]',
-                linkSelector: 'a',
-                titleSelector: 'h6',
+                wrapper: '[data-cy="l-card"]',
+                link: 'a',
+                title: 'h6',
             },
         },
     );

@@ -8,6 +8,10 @@ services:
             NODE_ENV: development
             PROJECT_DIR: /app
             REDIS_URL: redis://redis:6379
+            SINCH_URL: ${SINCH_URL:-}
+            SINCH_JWT: ${SINCH_JWT:-}
+            SMS_FROM: ${SMS_FROM:-}
+            SMS_TO: ${SMS_TO:-}
         volumes:
             - .:/app
             - ./docker/node/docker-entrypoint.dev.sh:/usr/local/bin/docker-entrypoint.dev.sh

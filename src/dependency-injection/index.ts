@@ -1,5 +1,6 @@
 import * as redis from 'redis';
 import { PrismaClient } from 'prisma/client';
+import * as config from 'src/dependency-injection/offer-sources';
 import { shared } from 'src/dependency-injection/di-utils';
 import { env } from 'src/dependency-injection/env';
 import { Cache } from 'src/infrastructure/cache/Cache';
@@ -13,12 +14,12 @@ import { OfferImporter } from 'src/application/services/offer-importer/OfferImpo
 import { Refresh } from 'src/application/use-cases/Refresh';
 import { SinchSmsSender } from 'src/infrastructure/notifier/sms-sender/SinchSmsSender';
 import { SmsNotifier } from 'src/infrastructure/notifier/SmsNotifier';
-import * as config from 'src/dependency-injection/offer-sources';
 import { StdoutFakeSmsSender } from 'src/infrastructure/notifier/sms-sender/StdoutFakeSmsSender';
 import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
 import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSmsSender';
 
-let preShutdowns: Array<() => void> = [];
+type PreShutdownAction = () => void | Promise<void>;
+const toExecuteBeforeShutdown: PreShutdownAction[] = [];
 
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
@@ -65,7 +66,7 @@ class Container {
 
     redisClient = shared(async () => {
         const client: redis.RedisClientType = redis.createClient({ url: env.REDIS_URL });
-        preShutdowns.push(() => client.disconnect());
+        toExecuteBeforeShutdown.push(() => client.disconnect());
 
         return client;
     });
@@ -103,5 +104,5 @@ export async function runWithServices<TKeys extends keyof Container>(
 
     await callback(servicesToInject);
 
-    await Promise.allSettled(preShutdowns.map(ps => ps()));
+    await Promise.allSettled(toExecuteBeforeShutdown.map(action => action()));
 }

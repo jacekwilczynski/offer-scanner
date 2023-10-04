@@ -5,7 +5,7 @@ yarn install
 yarn prisma generate
 
 dbConnectionAttemptsLeft=20
-until yarn prisma db push; do
+until yarn prisma migrate deploy; do
     dbConnectionAttemptsLeft=$((dbConnectionAttemptsLeft - 1))
 
     if [ "$dbConnectionAttemptsLeft" -gt 0 ]; then

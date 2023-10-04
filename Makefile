@@ -1,7 +1,7 @@
 RESET=\033[0m
 GREEN=\033[0;32m
 
-all: build start
+all: build load-fixtures start
 
 anew: clean all
 
@@ -11,6 +11,9 @@ build:
 clean:
 	docker compose down --remove-orphans --rmi all --volumes
 	rm -rf dist node_modules
+
+load-fixtures:
+	docker compose run node yarn app:load-fixtures
 
 restart: stop start
 

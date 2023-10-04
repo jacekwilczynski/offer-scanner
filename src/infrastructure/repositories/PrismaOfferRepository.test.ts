@@ -1,7 +1,7 @@
 import { useDatabase } from 'src/utils/testing/composables';
 import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
 import { OfferRepository } from 'src/application/interfaces/OfferRepository';
-import { services } from 'src/dependency-injection';
+import { container } from 'src/dependency-injection';
 import { Prisma } from 'prisma/client';
 import OfferCreateInput = Prisma.OfferCreateInput;
 
@@ -11,7 +11,7 @@ describe(PrismaOfferRepository.name, () => {
     let offerRepository: OfferRepository;
 
     beforeEach(async () => {
-        offerRepository = await services.offerRepository();
+        offerRepository = await container.offerRepository();
     });
 
     it('can when there are offers with notifications', async () => {

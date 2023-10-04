@@ -1,6 +1,6 @@
 import { useDatabase } from 'src/utils/testing/composables';
 import { Prisma } from 'prisma/client';
-import { services } from 'src/dependency-injection';
+import { container } from 'src/dependency-injection';
 import { PrismaListingRepository } from 'src/infrastructure/repositories/PrismaListingRepository';
 
 const prisma = useDatabase();
@@ -9,7 +9,7 @@ describe(PrismaListingRepository.name, () => {
     let listingRepository: PrismaListingRepository;
 
     beforeEach(async () => {
-        listingRepository = await services.listingRepository();
+        listingRepository = await container.listingRepository();
     });
 
     it('can find all watched listings', async () => {

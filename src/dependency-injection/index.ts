@@ -18,9 +18,6 @@ import { StdoutFakeSmsSender } from 'src/infrastructure/notifier/sms-sender/Stdo
 import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
 import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSmsSender';
 
-type PreShutdownAction = () => void | Promise<void>;
-const toExecuteBeforeShutdown: PreShutdownAction[] = [];
-
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
 
@@ -89,20 +86,29 @@ class Container {
     });
 }
 
-export const services: Readonly<Container> = new Container();
+export const container: Readonly<Container> = new Container();
+
+export type ServiceCollection<TKeys extends keyof Container> = { [K in TKeys]: Awaited<ReturnType<Container[K]>> }
 
 export async function runWithServices<TKeys extends keyof Container>(
     keys: TKeys[],
-    callback: (services: { [K in TKeys]: Awaited<ReturnType<Container[K]>> }) => Promise<void>,
+    callback: (services: ServiceCollection<TKeys>) => Promise<void>,
 ) {
-    const entryPromises = keys.map(
-        async key => services[key]().then(service => [key, service]),
-    );
+    const servicesToInject = await getServices(keys);
+    await callback(servicesToInject);
+    await Promise.allSettled(toExecuteBeforeShutdown.map(action => action()));
+}
+
+type PreShutdownAction = () => void | Promise<void>;
+const toExecuteBeforeShutdown: PreShutdownAction[] = [];
+
+async function getServices<TKeys extends keyof Container>(keys: TKeys[]) {
+    const entryPromises = keys.map(async (key) => {
+        const service = await container[key]();
+        return [key, service];
+    });
 
     const entries = await Promise.all(entryPromises);
-    const servicesToInject = Object.fromEntries(entries);
 
-    await callback(servicesToInject);
-
-    await Promise.allSettled(toExecuteBeforeShutdown.map(action => action()));
+    return Object.fromEntries(entries) as ServiceCollection<TKeys>;
 }

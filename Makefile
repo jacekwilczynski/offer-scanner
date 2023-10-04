@@ -12,7 +12,7 @@ clean:
 	docker compose down --remove-orphans --rmi all --volumes
 	rm -rf dist node_modules
 
-restart: stop start shell
+restart: stop start
 
 shell:
 	@echo "\n${GREEN}Run 'yarn app:refresh' to check for new offers. Check package.json for more commands.${RESET}\n"

@@ -2,16 +2,7 @@ services:
     node:
         build:
             context: .
-        environment:
-            DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
-            HTTP_CLIENT_CACHE: 1
-            NODE_ENV: development
-            PROJECT_DIR: /app
-            REDIS_URL: redis://redis:6379
-            SINCH_URL: ${SINCH_URL:-}
-            SINCH_JWT: ${SINCH_JWT:-}
-            SMS_FROM: ${SMS_FROM:-}
-            SMS_TO: ${SMS_TO:-}
+        env_file: [".env"]
         volumes:
             - .:/app
             - ./docker/node/docker-entrypoint.dev.sh:/usr/local/bin/docker-entrypoint.dev.sh

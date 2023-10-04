@@ -4,7 +4,7 @@ const envSchema = z.object({
     DATABASE_URL: z.string().url(),
     HTTP_CLIENT_CACHE: z.string().optional().transform(v => v === '1'),
     PROJECT_DIR: z.string(),
-    REDIS_URL: z.string().url(),
+    REDIS_URL: z.string().url().optional(),
     SINCH_URL: z.string().optional(),
     SINCH_JWT: z.string().optional(),
     SMS_FROM: z.string().optional(),

@@ -17,6 +17,7 @@ import { SmsNotifier } from 'src/infrastructure/notifier/SmsNotifier';
 import { StdoutFakeSmsSender } from 'src/infrastructure/notifier/sms-sender/StdoutFakeSmsSender';
 import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
 import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSmsSender';
+import * as assert from 'assert';
 
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
@@ -62,7 +63,9 @@ class Container {
     prisma = shared(async () => new PrismaClient());
 
     redisClient = shared(async () => {
-        const client: redis.RedisClientType = redis.createClient({ url: env.REDIS_URL });
+        const url = env.REDIS_URL;
+        assert(url, 'REDIS_URL env var must not be empty.');
+        const client: redis.RedisClientType = redis.createClient({ url });
         toExecuteBeforeShutdown.push(() => client.disconnect());
 
         return client;

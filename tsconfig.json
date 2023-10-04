@@ -2,8 +2,7 @@
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
         "baseUrl": ".",
-        // "dom" only for `fetch`
-        "lib": ["esnext", "dom"],
+        "lib": ["esnext"],
         "module": "commonjs",
         "moduleResolution": "node",
         "noEmit": true,

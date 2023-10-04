@@ -1,4 +1,5 @@
 import { Sms, SmsSender } from 'src/infrastructure/notifier/sms-sender/SmsSender';
+import fetch from 'cross-fetch';
 
 export class SinchSmsSender implements SmsSender {
     constructor(

@@ -16,7 +16,7 @@ export class SmsNotifier implements Notifier {
 
         for (const listing of listings) {
             for (const offer of listing.offers.slice(0, SmsNotifier.MAX_OFFERS_PER_LISTING)) {
-                body += `\n\n${offer.title}:\n${offer.url}`;
+                body += `\n\n${offer.url}`;
             }
 
             if (listing.offers.length > SmsNotifier.MAX_OFFERS_PER_LISTING) {

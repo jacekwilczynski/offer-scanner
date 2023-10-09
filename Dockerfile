@@ -28,14 +28,10 @@ FROM base AS prod
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile --production
 
-# cron
-RUN apk add --no-cache apk-cron
-COPY docker/node/crontab /etc/crontabs/root
-CMD ["crond", "-f"]
-
 # entrypoint
 COPY docker/node/docker-entrypoint.base.sh docker/node/docker-entrypoint.prod.sh /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.prod.sh"]
+CMD ["yarn", "app:watch"]
 
 # prisma
 COPY prisma/ ./prisma

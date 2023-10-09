@@ -18,7 +18,7 @@ load-fixtures:
 restart: stop start
 
 shell:
-	@echo "\n${GREEN}Run 'yarn app:refresh' to check for new offers. Check package.json for more commands.${RESET}\n"
+	@echo "\n${GREEN}Run 'yarn app:watch' to watch for new offers. Check package.json for more commands.${RESET}\n"
 	docker compose exec node sh || docker compose logs
 
 start:

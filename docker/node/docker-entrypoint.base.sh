@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-
 set -e
 
 if [ "$1" != "sh" ]; then

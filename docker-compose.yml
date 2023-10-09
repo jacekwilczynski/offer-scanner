@@ -2,14 +2,15 @@ services:
     node:
         build:
             context: .
+            target: dev
         env_file: [".env"]
         volumes:
             - .:/app
+            - ./docker/node/docker-entrypoint.base.sh:/usr/local/bin/docker-entrypoint.base.sh
             - ./docker/node/docker-entrypoint.dev.sh:/usr/local/bin/docker-entrypoint.dev.sh
         depends_on:
             - postgres
             - redis
-        entrypoint: ['/usr/local/bin/docker-entrypoint.dev.sh']
         command: ['tail', '-f', '/dev/null']
 
     postgres:

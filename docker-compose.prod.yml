@@ -1,0 +1,6 @@
+services:
+    node:
+        build:
+            context: .
+            target: prod
+        image: registry.digitalocean.com/offer-scanner/node

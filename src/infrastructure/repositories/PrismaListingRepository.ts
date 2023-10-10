@@ -38,8 +38,9 @@ export class PrismaListingRepository implements ListingRepository {
             where: { url: listing.url },
             data: {
                 offers: {
-                    connectOrCreate: offers.map(offer => ({
+                    upsert: offers.map(offer => ({
                         create: offer,
+                        update: offer,
                         where: { url: offer.url },
                     })),
                 },

@@ -14,12 +14,12 @@ describe(PrismaOfferRepository.name, () => {
         offerRepository = await container.offerRepository();
     });
 
-    it('can when there are offers with notifications', async () => {
+    it('can tell when there are offers with notifications', async () => {
         await theFollowingOffers({ url: 'https://one.com/', notifiedAboutAt: new Date() });
         expect(await offerRepository.hasAnyNotifiedAbout()).toBe(true);
     });
 
-    it('can when there are no offers with notifications', async () => {
+    it('can tell when there are no offers with notifications', async () => {
         await theFollowingOffers({ url: 'https://one.com/' });
         expect(await offerRepository.hasAnyNotifiedAbout()).toBe(false);
     });

@@ -7,16 +7,19 @@ export const offerSources: Record<string, DomOverHttpSourceConfig> = {
             wrapper: '[data-cy="l-card"]',
             link: 'a',
             title: 'h6',
-            detailSelector: '[data-cy="ad_description"]'
+            detailSelector: '[data-cy="ad_description"]',
         },
     },
     'otodom.pl': {
         urlRegex: new RegExp('^(https?://)?[^]*otodom.pl/'),
         selectors: {
-            wrapper: '[data-cy=listing-item]',
-            link: '[data-cy=listing-item-link]',
-            title: '[data-cy=listing-item-title]',
-            detailSelector: 'main',
+            wrapper: '[data-cy="listing-item"]',
+            link: '[data-cy="listing-item-link"]',
+            title: '[data-cy="listing-item-title"]',
+            detailSelector:
+                '[data-testid="ad.top-information.table"],' +
+                '[data-testid="content-container"],' +
+                '[data-testid="ad.additional-information.table"]',
         },
     },
 };

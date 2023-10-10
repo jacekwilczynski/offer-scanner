@@ -15,7 +15,7 @@ describe(DomOverHttpSource.name, () => {
                 wrapper: '[data-cy="l-card"]',
                 link: 'a',
                 title: 'h6',
-                detailSelector: 'main',
+                detailSelector: 'h1, p',
             },
         },
     );
@@ -56,7 +56,8 @@ describe(DomOverHttpSource.name, () => {
         httpClient.fetchText.calledWith('https://olx.pl/offers/third').mockResolvedValueOnce(`
 <body>
     <header>OLX</header>
-    <main><h1>Third</h1></main>
+    <h1>Third</h1>
+    <p>Lorem ipsum dolor sit amet</p>
 </body>
         `);
 
@@ -69,7 +70,7 @@ describe(DomOverHttpSource.name, () => {
 
         expect(offers).toEqual([
             { url: 'https://olx.pl/offers/second', title: 'Second', content: '' },
-            { url: 'https://olx.pl/offers/third', title: 'Third', content: '<h1>Third</h1>' },
+            { url: 'https://olx.pl/offers/third', title: 'Third', content: '<h1>Third</h1>\n<p>Lorem ipsum dolor sit amet</p>' },
         ] satisfies Offer[]);
     });
 

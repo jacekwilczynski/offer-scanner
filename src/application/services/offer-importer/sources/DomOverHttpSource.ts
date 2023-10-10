@@ -26,7 +26,9 @@ export class DomOverHttpSource extends OfferSource {
             const url = this.extractUrl(wrapper, schemeAndDomain);
             const title = this.extractTitle(wrapper);
             const document = await this.loadDocument(url);
-            const content = document.querySelector(this.config.selectors.detailSelector)?.innerHTML ?? '';
+            const content = [...document.querySelectorAll(this.config.selectors.detailSelector)]
+                .map(element => element.outerHTML)
+                .join('\n');
 
             return ({ url, title, content });
         });

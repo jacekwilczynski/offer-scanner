@@ -15,20 +15,20 @@ describe(PrismaOfferRepository.name, () => {
     });
 
     it('can when there are offers with notifications', async () => {
-        await theFollowingOffers({ url: 'https://one.com/', title: 'one', notifiedAboutAt: new Date() });
+        await theFollowingOffers({ url: 'https://one.com/', notifiedAboutAt: new Date() });
         expect(await offerRepository.hasAnyNotifiedAbout()).toBe(true);
     });
 
     it('can when there are no offers with notifications', async () => {
-        await theFollowingOffers({ url: 'https://one.com/', title: 'one' });
+        await theFollowingOffers({ url: 'https://one.com/' });
         expect(await offerRepository.hasAnyNotifiedAbout()).toBe(false);
     });
 
     it('can record notification', async () => {
         // given
         await theFollowingOffers(
-            { url: 'https://one.com/', title: 'one' },
-            { url: 'https://two.com/', title: 'two' },
+            { url: 'https://one.com/' },
+            { url: 'https://two.com/' },
         );
 
         // when
@@ -44,8 +44,11 @@ describe(PrismaOfferRepository.name, () => {
     });
 });
 
-async function theFollowingOffers(...offers: OfferCreateInput[]) {
-    await prisma.offer.createMany({ data: offers });
+type PartialOfferInput = Pick<OfferCreateInput, 'url' | 'notifiedAboutAt'>;
+
+async function theFollowingOffers(...partials: PartialOfferInput[]) {
+    const data = partials.map(o => ({ ...o, title: o.url, content: o.url }));
+    await prisma.offer.createMany({ data });
 }
 
 async function findAllOffers() {

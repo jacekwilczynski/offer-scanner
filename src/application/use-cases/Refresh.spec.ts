@@ -1,10 +1,10 @@
 import { mock } from 'jest-mock-extended';
+import { fromPartial } from 'src/utils/testing/types';
 import { OfferImporter } from 'src/application/services/offer-importer/OfferImporter';
 import { ListingRepository } from 'src/application/interfaces/ListingRepository';
 import { OfferRepository } from 'src/application/interfaces/OfferRepository';
 import { Notifier } from 'src/application/interfaces/Notifier';
 import { Refresh } from 'src/application/use-cases/Refresh';
-import { fromPartial } from 'src/utils/testing/types';
 import { SavedListingWithOffers } from 'src/model/Listing';
 
 describe(Refresh.name, () => {
@@ -50,23 +50,14 @@ describe(Refresh.name, () => {
             fromPartial({
                 url: 'https://abc.com',
                 offers: [
-                    {
-                        url: 'https://abc.com/one',
-                        title: 'ABC one',
-                    },
-                    {
-                        url: 'https://abc.com/two',
-                        title: 'ABC two',
-                    },
+                    fromPartial({ url: 'https://abc.com/one' }),
+                    fromPartial({ url: 'https://abc.com/two' }),
                 ],
             }),
             fromPartial({
                 url: 'https://def.com',
                 offers: [
-                    {
-                        url: 'https://def.com/one',
-                        title: 'DEF one',
-                    },
+                    fromPartial({ url: 'https://def.com/one' }),
                 ],
             }),
         ];

@@ -7,6 +7,7 @@ export const offerSources: Record<string, DomOverHttpSourceConfig> = {
             wrapper: '[data-cy="l-card"]',
             link: 'a',
             title: 'h6',
+            detailSelector: '[data-cy="ad_description"]'
         },
     },
     'otodom.pl': {
@@ -15,6 +16,7 @@ export const offerSources: Record<string, DomOverHttpSourceConfig> = {
             wrapper: '[data-cy=listing-item]',
             link: '[data-cy=listing-item-link]',
             title: '[data-cy=listing-item-title]',
+            detailSelector: 'main',
         },
     },
 };

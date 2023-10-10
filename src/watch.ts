@@ -10,8 +10,8 @@ http
     .listen(8080, () => {
         console.log('Healthcheck endpoint listening on port 8080.')
 
-        runWithServices(['refresh'], async ({ refresh }) => {
+        runWithServices(['refresh'], ({ refresh }) => {
+            refresh.execute();
             setInterval(() => refresh.execute().catch(console.error), 60_000);
         });
     });
-

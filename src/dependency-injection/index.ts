@@ -93,13 +93,15 @@ export const container: Readonly<Container> = new Container();
 
 export type ServiceCollection<TKeys extends keyof Container> = { [K in TKeys]: Awaited<ReturnType<Container[K]>> }
 
-export async function runWithServices<TKeys extends keyof Container>(
+export async function runWithServices<TKeys extends keyof Container, TReturn>(
     keys: TKeys[],
-    callback: (services: ServiceCollection<TKeys>) => Promise<void>,
+    callback: (services: ServiceCollection<TKeys>) => TReturn,
 ) {
     const servicesToInject = await getServices(keys);
-    await callback(servicesToInject);
+    const callbackReturn = await callback(servicesToInject);
     await Promise.allSettled(toExecuteBeforeShutdown.map(action => action()));
+
+    return callbackReturn;
 }
 
 type PreShutdownAction = () => void | Promise<void>;

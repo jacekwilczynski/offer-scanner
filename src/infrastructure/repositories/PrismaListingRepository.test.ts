@@ -39,6 +39,7 @@ describe(PrismaListingRepository.name, () => {
                     create: [{
                         url: 'https://unwatched-with-new-offers.com/one',
                         title: 'New offer in unwatched listing',
+                        content: '<p>New offer in unwatched listing</p>',
                     }],
                 },
             },
@@ -50,11 +51,13 @@ describe(PrismaListingRepository.name, () => {
                         {
                             url: 'https://watched-with-new-offers.com/old-offer',
                             title: 'Old offer in watched listing that has new offers',
+                            content: '<p>Old offer in watched listing that has new offers</p>',
                             notifiedAboutAt: new Date(),
                         },
                         {
                             url: 'https://watched-with-new-offers.com/new-offer',
                             title: 'New offer in watched listing',
+                            content: '<p>New offer in watched listing</p>',
                         },
                     ],
                 },
@@ -67,6 +70,7 @@ describe(PrismaListingRepository.name, () => {
                         {
                             url: 'https://watched-without-new-offers.com/old-offer',
                             title: 'Old offer in watched listing that does not have new offers',
+                            content: '<p>Old offer in watched listing that does not have new offers</p>',
                             notifiedAboutAt: new Date(),
                         },
                     ],
@@ -83,6 +87,7 @@ describe(PrismaListingRepository.name, () => {
         expect(listings[0]!.offers).toHaveLength(1);
         expect(listings[0]!.offers[0]!).toHaveProperty('url', 'https://watched-with-new-offers.com/new-offer');
         expect(listings[0]!.offers[0]!).toHaveProperty('title', 'New offer in watched listing');
+        expect(listings[0]!.offers[0]!).toHaveProperty('content', '<p>New offer in watched listing</p>');
     });
 
     it('can add new offers to existing listing', async () => {
@@ -95,10 +100,12 @@ describe(PrismaListingRepository.name, () => {
                         {
                             url: 'https://abc.com/1',
                             title: 'Jeden',
+                            content: '<p>Jeden</p>',
                         },
                         {
                             url: 'https://abc.com/2',
                             title: 'Dwa',
+                            content: '<p>Dwa</p>',
                         },
                     ],
                 },
@@ -111,11 +118,13 @@ describe(PrismaListingRepository.name, () => {
             [
                 {
                     url: 'https://abc.com/2',
-                    title: 'Dwa',
+                    title: 'DwaModified',
+                    content: '<p>DwaModified</p>',
                 },
                 {
                     url: 'https://abc.com/3',
                     title: 'Trzy',
+                    content: '<p>Trzy</p>',
                 },
             ],
         );
@@ -126,6 +135,9 @@ describe(PrismaListingRepository.name, () => {
         expect(listings).toHaveLength(1);
         expect(listings[0]!).toHaveProperty('url', 'https://abc.com');
         expect(listings[0]!.offers).toHaveLength(3);
+        expect(listings[0]!.offers[0]!).toHaveProperty('title', 'Jeden');
+        expect(listings[0]!.offers[1]!).toHaveProperty('title', 'DwaModified');
+        expect(listings[0]!.offers[2]!).toHaveProperty('title', 'Trzy');
     });
 });
 
@@ -143,6 +155,7 @@ function findAllListings() {
                 select: {
                     url: true,
                     title: true,
+                    content: true,
                 },
             },
         },

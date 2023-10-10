@@ -15,15 +15,14 @@ describe(DomOverHttpSource.name, () => {
                 wrapper: '[data-cy="l-card"]',
                 link: 'a',
                 title: 'h6',
+                detailSelector: 'h1, p',
             },
         },
     );
 
-    it('should fetch and parse offers from supported URL', async () => {
+    it('should fetch and parse working offers from supported URL', async () => {
         // given
-        httpClient
-            .fetchText
-            .mockResolvedValueOnce(`
+        httpClient.fetchText.calledWith('https://olx.pl/listing').mockResolvedValueOnce(`
 <div data-cy="l-card">
     <a href="https://olx.pl/offers/first">
         <h6>First</h6>
@@ -36,18 +35,42 @@ describe(DomOverHttpSource.name, () => {
     <h6>Second</h6>
     <p>2023-09-28</p>
 </div>
+<div data-cy="l-card">
+    <a href="https://olx.pl/offers/third">
+        <h6>Third</h6>
+        <p>2023-09-27</p>
+    </a>
+</div>
 `);
+
+        httpClient.fetchText.calledWith('https://olx.pl/offers/first').mockRejectedValue(new Error('oops'));
+
+        httpClient.fetchText.calledWith('https://olx.pl/offers/second').mockResolvedValueOnce(`
+<body>
+    <header>OLX</header>
+    <!-- no offer details for whatever reason --> 
+    <footer>Bye!</footer>
+</body>
+        `);
+
+        httpClient.fetchText.calledWith('https://olx.pl/offers/third').mockResolvedValueOnce(`
+<body>
+    <header>OLX</header>
+    <h1>Third</h1>
+    <p>Lorem ipsum dolor sit amet</p>
+</body>
+        `);
 
         // when
         const offers = await source.fetchOffers('https://olx.pl/listing');
 
         // then
-        expect(httpClient.fetchText).toHaveBeenCalledTimes(1);
+        expect(httpClient.fetchText).toHaveBeenCalledTimes(4);
         expect(httpClient.fetchText).toHaveBeenCalledWith('https://olx.pl/listing');
 
         expect(offers).toEqual([
-            { url: 'https://olx.pl/offers/first', title: 'First' },
-            { url: 'https://olx.pl/offers/second', title: 'Second' },
+            { url: 'https://olx.pl/offers/second', title: 'Second', content: '' },
+            { url: 'https://olx.pl/offers/third', title: 'Third', content: '<h1>Third</h1>\n<p>Lorem ipsum dolor sit amet</p>' },
         ] satisfies Offer[]);
     });
 

@@ -3,6 +3,7 @@ import { JSDOM } from 'jsdom';
 import { OfferSource } from 'src/application/services/offer-importer/sources/OfferSource';
 import { Offer } from 'src/model/Offer';
 import { HttpClient } from 'src/application/interfaces/HttpClient';
+import { isFulfilled } from 'src/utils/type-guards';
 
 export class DomOverHttpSource extends OfferSource {
     constructor(
@@ -21,14 +22,24 @@ export class DomOverHttpSource extends OfferSource {
         const document = await this.loadDocument(listingUrl);
         const offerWrappers = [...document.querySelectorAll(this.config.selectors.wrapper)];
 
-        return offerWrappers.map(wrapper => ({
-            url: this.extractUrl(wrapper, schemeAndDomain),
-            title: this.extractTitle(wrapper),
-        }));
+        const promises = offerWrappers.map(async (wrapper) => {
+            const url = this.extractUrl(wrapper, schemeAndDomain);
+            const title = this.extractTitle(wrapper);
+            const document = await this.loadDocument(url);
+            const content = [...document.querySelectorAll(this.config.selectors.detailSelector)]
+                .map(element => element.outerHTML)
+                .join('\n');
+
+            return ({ url, title, content });
+        });
+
+        const results = await Promise.allSettled(promises);
+
+        return results.filter(isFulfilled).map(r => r.value);
     }
 
-    private async loadDocument(listingUrl: string) {
-        const html = await this.httpClient.fetchText(listingUrl);
+    private async loadDocument(url: string) {
+        const html = await this.httpClient.fetchText(url);
 
         return new JSDOM(html).window.document;
     }
@@ -59,6 +70,7 @@ export type OfferSelectors = {
     wrapper: string;
     link: string;
     title: string;
+    detailSelector: string;
 }
 
 function getUrlBase(url: string) {

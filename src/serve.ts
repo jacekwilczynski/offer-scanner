@@ -2,7 +2,7 @@ import { runWithServices } from 'src/dependency-injection';
 import { env } from 'src/dependency-injection/env';
 
 runWithServices(['refresh', 'server'], async ({ refresh, server }) => {
-    await server.listen();
+    await server.listen(env.HTTP_PORT);
     console.log(`Listening on port ${env.HTTP_PORT}.`);
 
     refresh.execute();

@@ -79,7 +79,7 @@ class Container {
         await this.notifier(),
     ));
 
-    server = shared(async () => new Server(env.HTTP_PORT));
+    server = shared(async () => new Server());
 
     smsSender = shared(async () => {
         if (env.SINCH_URL && env.SINCH_JWT) {

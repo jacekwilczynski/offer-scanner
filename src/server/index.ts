@@ -4,15 +4,13 @@ import { routes } from 'src/server/routes';
 export class Server {
     private readonly app = new Koa();
 
-    constructor(
-        private readonly port: number,
-    ) {
+    constructor() {
         this.app.use(routes);
     }
 
-    listen() {
+    listen(port: number) {
         return new Promise<void>(resolve => {
-            this.app.listen(this.port, resolve);
+            this.app.listen(port, resolve);
         });
     }
 }

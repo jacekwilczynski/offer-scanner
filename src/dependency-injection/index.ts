@@ -18,6 +18,7 @@ import { StdoutFakeSmsSender } from 'src/infrastructure/notifier/sms-sender/Stdo
 import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
 import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSmsSender';
 import * as assert from 'assert';
+import { Server } from 'src/server';
 
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
@@ -77,6 +78,8 @@ class Container {
         await this.offerRepository(),
         await this.notifier(),
     ));
+
+    server = shared(async () => new Server(env.HTTP_PORT));
 
     smsSender = shared(async () => {
         if (env.SINCH_URL && env.SINCH_JWT) {

@@ -5,9 +5,8 @@ type Context = Parameters<Parameters<typeof router['use']>[1]>[0];
 
 export const routes = router
     .get('/healthcheck', healthcheck)
-    .get('/',)
     .routes();
 
-function healthcheck(ctx: Context) {
+async function healthcheck(ctx: Context) {
     ctx.body = 'ok';
 }

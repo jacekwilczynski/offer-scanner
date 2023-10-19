@@ -1,8 +1,11 @@
 import { z } from 'zod';
 
+const DIGITS_ONLY = /^[0-9]+$/;
+
 const envSchema = z.object({
     DATABASE_URL: z.string().url(),
     HTTP_CLIENT_CACHE: z.string().optional().transform(v => v === '1'),
+    HTTP_PORT: z.string().regex(DIGITS_ONLY).transform(Number),
     PROJECT_DIR: z.string(),
     REDIS_URL: z.string().url().optional(),
     SINCH_URL: z.string().optional(),

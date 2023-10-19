@@ -8,10 +8,12 @@ services:
             - .:/app
             - ./docker/node/docker-entrypoint.base.sh:/usr/local/bin/docker-entrypoint.base.sh
             - ./docker/node/docker-entrypoint.dev.sh:/usr/local/bin/docker-entrypoint.dev.sh
+        ports:
+            - "${HOST_HTTP_PORT}:${HTTP_PORT}"
         depends_on:
             - postgres
             - redis
-        command: ['tail', '-f', '/dev/null']
+        command: ["tail", "-f", "/dev/null"]
 
     postgres:
         image: postgres:16.0-alpine3.18

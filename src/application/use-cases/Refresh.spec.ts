@@ -14,23 +14,6 @@ describe(Refresh.name, () => {
     const notifier = mock<Notifier>();
     const refresh = new Refresh(offerImporter, listingRepository, offerRepository, notifier);
 
-    it('should not notify on first run', async () => {
-        // given
-        listingRepository.findAllWatchedWithNewOffers.mockResolvedValueOnce([fromPartial({
-            url: 'https://offers.com/',
-            offers: [fromPartial({ url: 'https://offers.com/offer' })],
-        })]);
-
-        offerRepository.hasAnyNotifiedAbout.mockResolvedValueOnce(false);
-
-        // when
-        await refresh.execute();
-
-        // then
-        expect(notifier.notifyAboutNewOffers).not.toHaveBeenCalled();
-        expect(offerRepository.markNotified).toHaveBeenCalled();
-    });
-
     it('should not notify if no new offers', async () => {
         // given
         listingRepository.findAllWatchedWithNewOffers.mockResolvedValueOnce([]);

@@ -1,12 +1,12 @@
 import * as assert from 'assert';
 import * as config from 'src/dependency-injection/offer-sources';
 import * as redis from 'redis';
-import * as EventEmitter from 'events';
+import { AppEventEmitter } from 'src/application/EventMap';
+import { AsyncEventEmitter } from 'src/utils/EventEmitter';
 import { Cache } from 'src/infrastructure/cache/Cache';
 import { CachedHttpClient } from 'src/infrastructure/http-client/CachedHttpClient';
 import { DomOverHttpSource } from 'src/application/services/offer-importer/sources/DomOverHttpSource';
 import { env } from 'src/dependency-injection/env';
-import { EventMap } from 'src/application/events';
 import { HttpClient } from 'src/application/interfaces/HttpClient';
 import { OfferFetcher } from 'src/application/services/offer-importer/OfferFetcher';
 import { OfferImporter } from 'src/application/services/offer-importer/OfferImporter';
@@ -26,7 +26,7 @@ import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSm
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
 
-    eventEmitter = shared(async () => new EventEmitter() as TypedEventEmitter<EventMap>);
+    eventEmitter = shared(async () => new AsyncEventEmitter() as AppEventEmitter);
 
     httpClient = shared(async () => {
         let httpClient: HttpClient = new RealHttpClient();

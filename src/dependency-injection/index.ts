@@ -77,8 +77,8 @@ class Container {
     refresh = shared(async () => new Refresh(
         await this.offerImporter(),
         await this.listingRepository(),
-        await this.offerRepository(),
         await this.notifier(),
+        await this.eventEmitter(),
     ));
 
     server = shared(async () => new Server(env.PROJECT_DIR));

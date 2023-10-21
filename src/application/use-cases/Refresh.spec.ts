@@ -1,30 +1,29 @@
 import { mock } from 'jest-mock-extended';
+import { fromPartial } from 'src/utils/testing/types';
 import { OfferImporter } from 'src/application/services/offer-importer/OfferImporter';
 import { ListingRepository } from 'src/application/interfaces/ListingRepository';
-import { OfferRepository } from 'src/application/interfaces/OfferRepository';
 import { Notifier } from 'src/application/interfaces/Notifier';
 import { Refresh } from 'src/application/use-cases/Refresh';
-import { fromPartial } from 'src/utils/testing/types';
 import { SavedListingWithOffers } from 'src/model/Listing';
+import { AppEventEmitter } from 'src/application/EventMap';
 
 describe(Refresh.name, () => {
     const offerImporter = mock<OfferImporter>();
     const listingRepository = mock<ListingRepository>();
-    const offerRepository = mock<OfferRepository>();
     const notifier = mock<Notifier>();
-    const refresh = new Refresh(offerImporter, listingRepository, offerRepository, notifier);
+    const eventEmitter = mock<AppEventEmitter>();
+    const refresh = new Refresh(offerImporter, listingRepository, notifier, eventEmitter);
 
     it('should not notify if no new offers', async () => {
         // given
         listingRepository.findAllWatchedWithNewOffers.mockResolvedValueOnce([]);
-        offerRepository.hasAnyNotifiedAbout.mockResolvedValueOnce(true);
 
         // when
         await refresh.execute();
 
         // then
         expect(notifier.notifyAboutNewOffers).not.toHaveBeenCalled();
-        expect(offerRepository.markNotified).not.toHaveBeenCalled();
+        expect(eventEmitter.emitAsync).not.toHaveBeenCalled();
     });
 
     it('should execute import and notify about new offers', async () => {
@@ -55,7 +54,6 @@ describe(Refresh.name, () => {
         ];
 
         listingRepository.findAllWatchedWithNewOffers.mockResolvedValueOnce(listings);
-        offerRepository.hasAnyNotifiedAbout.mockResolvedValueOnce(true);
 
         // when
         await refresh.execute();
@@ -63,12 +61,11 @@ describe(Refresh.name, () => {
         // then
         expect(offerImporter.import).toHaveBeenCalledTimes(1);
         expect(listingRepository.findAllWatchedWithNewOffers).toHaveBeenCalledTimes(1);
-        expect(notifier.notifyAboutNewOffers).toHaveBeenCalledTimes(1);
 
-        expect(offerRepository.markNotified).toHaveBeenCalledTimes(1);
-        const markNotifiedCall = offerRepository.markNotified.mock.calls[0]!;
-        expect(markNotifiedCall[0]).toHaveProperty('url', 'https://abc.com/one');
-        expect(markNotifiedCall[1]).toHaveProperty('url', 'https://abc.com/two');
-        expect(markNotifiedCall[2]).toHaveProperty('url', 'https://def.com/one');
+        expect(notifier.notifyAboutNewOffers).toHaveBeenCalledTimes(1);
+        expect(notifier.notifyAboutNewOffers).toHaveBeenCalledWith(listings);
+
+        expect(eventEmitter.emitAsync).toHaveBeenCalledTimes(1);
+        expect(eventEmitter.emitAsync).toHaveBeenCalledWith('notification sent', listings);
     });
 });

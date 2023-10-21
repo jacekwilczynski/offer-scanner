@@ -1,28 +1,32 @@
-import * as redis from 'redis';
-import { PrismaClient } from 'prisma/client';
+import * as assert from 'assert';
 import * as config from 'src/dependency-injection/offer-sources';
-import { shared } from 'src/dependency-injection/di-utils';
-import { env } from 'src/dependency-injection/env';
+import * as redis from 'redis';
+import * as EventEmitter from 'events';
 import { Cache } from 'src/infrastructure/cache/Cache';
-import { HttpClient } from 'src/application/interfaces/HttpClient';
 import { CachedHttpClient } from 'src/infrastructure/http-client/CachedHttpClient';
-import { RealHttpClient } from 'src/infrastructure/http-client/RealHttpClient';
-import { PrismaListingRepository } from 'src/infrastructure/repositories/PrismaListingRepository';
-import { OfferFetcher } from 'src/application/services/offer-importer/OfferFetcher';
 import { DomOverHttpSource } from 'src/application/services/offer-importer/sources/DomOverHttpSource';
+import { env } from 'src/dependency-injection/env';
+import { EventMap } from 'src/application/events';
+import { HttpClient } from 'src/application/interfaces/HttpClient';
+import { OfferFetcher } from 'src/application/services/offer-importer/OfferFetcher';
 import { OfferImporter } from 'src/application/services/offer-importer/OfferImporter';
+import { PrismaClient } from 'prisma/client';
+import { PrismaListingRepository } from 'src/infrastructure/repositories/PrismaListingRepository';
+import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
+import { RealHttpClient } from 'src/infrastructure/http-client/RealHttpClient';
 import { Refresh } from 'src/application/use-cases/Refresh';
+import { Server } from 'src/server';
+import { shared } from 'src/dependency-injection/di-utils';
 import { SinchSmsSender } from 'src/infrastructure/notifier/sms-sender/SinchSmsSender';
+import { SkipFirstNotificationNotifier } from 'src/application/services/SkipFirstNotificationNotifier';
 import { SmsNotifier } from 'src/infrastructure/notifier/SmsNotifier';
 import { StdoutFakeSmsSender } from 'src/infrastructure/notifier/sms-sender/StdoutFakeSmsSender';
-import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
 import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSmsSender';
-import * as assert from 'assert';
-import { Server } from 'src/server';
-import { SkipFirstNotificationNotifier } from 'src/application/services/SkipFirstNotificationNotifier';
 
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
+
+    eventEmitter = shared(async () => new EventEmitter() as TypedEventEmitter<EventMap>);
 
     httpClient = shared(async () => {
         let httpClient: HttpClient = new RealHttpClient();

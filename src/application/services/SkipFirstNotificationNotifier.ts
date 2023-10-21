@@ -14,6 +14,8 @@ export class SkipFirstNotificationNotifier implements Notifier {
     async notifyAboutNewOffers(listings: ListingToNotifyAbout[]): Promise<void> {
         if (await this.offerRepository.hasAnyNotifiedAbout()) {
             this.inner.notifyAboutNewOffers(listings);
+        } else {
+            console.log('First run - skipping notification.');
         }
     }
 }

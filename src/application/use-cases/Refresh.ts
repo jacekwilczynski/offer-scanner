@@ -23,14 +23,7 @@ export class Refresh {
             return;
         }
 
-        const isFirstRun = !await this.offerRepository.hasAnyNotifiedAbout();
-        if (!isFirstRun) {
-            console.debug('Notifying about new listings.', listings);
-            await this.notifier.notifyAboutNewOffers(listings);
-        } else {
-            console.debug('First run - skipping notification.');
-        }
-
+        await this.notifier.notifyAboutNewOffers(listings);
         await this.markNotified(listings);
     }
 

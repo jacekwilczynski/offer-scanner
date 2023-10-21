@@ -19,6 +19,7 @@ import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOff
 import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSmsSender';
 import * as assert from 'assert';
 import { Server } from 'src/server';
+import { SkipFirstNotificationNotifier } from 'src/application/services/SkipFirstNotificationNotifier';
 
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
@@ -36,12 +37,9 @@ class Container {
         new PrismaListingRepository(await this.prisma()),
     );
 
-    notifier = shared(async () => new SmsNotifier(
-        await this.smsSender(),
-        {
-            from: env.SMS_FROM || 'n/a (using fake transport)',
-            to: env.SMS_TO || 'n/a (using fake transport)',
-        },
+    notifier = shared(async () => new SkipFirstNotificationNotifier(
+        await this.smsNotifier(),
+        await this.offerRepository(),
     ));
 
     offerFetcher = shared(async () => {
@@ -80,6 +78,14 @@ class Container {
     ));
 
     server = shared(async () => new Server(env.PROJECT_DIR));
+
+    smsNotifier = shared(async () => new SmsNotifier(
+        await this.smsSender(),
+        {
+            from: env.SMS_FROM || 'n/a (using fake transport)',
+            to: env.SMS_TO || 'n/a (using fake transport)',
+        },
+    ));
 
     smsSender = shared(async () => {
         if (env.SINCH_URL && env.SINCH_JWT) {

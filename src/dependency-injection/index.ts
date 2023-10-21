@@ -119,10 +119,11 @@ export async function runWithServices<TKeys extends keyof Container, TReturn>(
     callback: (services: ServiceCollection<TKeys>) => TReturn,
 ) {
     const servicesToInject = await getServices(keys);
-    const callbackReturn = await callback(servicesToInject);
-    await Promise.allSettled(toExecuteBeforeShutdown.map(action => action()));
-
-    return callbackReturn;
+    try {
+        return callback(servicesToInject);
+    } finally {
+        await Promise.allSettled(toExecuteBeforeShutdown.map(action => action()));
+    }
 }
 
 type PreShutdownAction = () => void | Promise<void>;

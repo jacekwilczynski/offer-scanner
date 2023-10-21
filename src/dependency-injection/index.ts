@@ -22,6 +22,7 @@ import { SkipFirstNotificationNotifier } from 'src/application/services/SkipFirs
 import { SmsNotifier } from 'src/infrastructure/notifier/SmsNotifier';
 import { StdoutFakeSmsSender } from 'src/infrastructure/notifier/sms-sender/StdoutFakeSmsSender';
 import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSmsSender';
+import { MarkOffersAsNotifiedAboutSubscriber } from 'src/application/services/MarkOffersAsNotifiedAboutSubscriber';
 
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
@@ -40,6 +41,11 @@ class Container {
     listingRepository = shared(async () =>
         new PrismaListingRepository(await this.prisma()),
     );
+
+    markOffersAsNotifiedAboutSubscriber = shared(async () => new MarkOffersAsNotifiedAboutSubscriber(
+        await this.eventEmitter(),
+        await this.offerRepository(),
+    ));
 
     notifier = shared(async () => new SkipFirstNotificationNotifier(
         await this.smsNotifier(),

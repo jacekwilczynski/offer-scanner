@@ -28,31 +28,7 @@ describe(Refresh.name, () => {
 
     it('should execute import and notify about new offers', async () => {
         // given
-        const listings: SavedListingWithOffers[] = [
-            fromPartial({
-                url: 'https://abc.com',
-                offers: [
-                    {
-                        url: 'https://abc.com/one',
-                        title: 'ABC one',
-                    },
-                    {
-                        url: 'https://abc.com/two',
-                        title: 'ABC two',
-                    },
-                ],
-            }),
-            fromPartial({
-                url: 'https://def.com',
-                offers: [
-                    {
-                        url: 'https://def.com/one',
-                        title: 'DEF one',
-                    },
-                ],
-            }),
-        ];
-
+        const listings: SavedListingWithOffers[] = [fromPartial({})];
         listingRepository.findAllWatchedWithNewOffers.mockResolvedValueOnce(listings);
 
         // when

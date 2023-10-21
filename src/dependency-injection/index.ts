@@ -3,6 +3,7 @@ import * as config from 'src/dependency-injection/offer-sources';
 import * as redis from 'redis';
 import { AppEventEmitter } from 'src/application/EventMap';
 import { AsyncEventEmitter } from 'src/utils/EventEmitter';
+import { BufferedNotifier } from 'src/infrastructure/notifier/BufferedNotifier';
 import { Cache } from 'src/infrastructure/cache/Cache';
 import { CachedHttpClient } from 'src/infrastructure/http-client/CachedHttpClient';
 import { DomOverHttpSource } from 'src/application/services/offer-importer/sources/DomOverHttpSource';
@@ -25,6 +26,8 @@ import { StdoutFakeSmsSender } from 'src/infrastructure/notifier/sms-sender/Stdo
 import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSmsSender';
 
 class Container {
+    bufferedNotifier = shared(async () => new BufferedNotifier());
+
     cache = shared(async () => new Cache(await this.redisClient()));
 
     eventEmitter = shared(async () => new AsyncEventEmitter() as AppEventEmitter);
@@ -50,7 +53,9 @@ class Container {
     ));
 
     notifier = shared(async () => new SkipFirstNotificationNotifier(
-        await this.smsNotifier(),
+        env.NOTIFICATION_CHANNEL === 'sms'
+            ? await this.smsNotifier()
+            : await this.bufferedNotifier(),
         await this.offerRepository(),
     ));
 

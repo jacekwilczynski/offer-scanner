@@ -6,6 +6,7 @@ const envSchema = z.object({
     DATABASE_URL: z.string().url(),
     HTTP_CLIENT_CACHE: z.string().optional().transform(v => v === '1'),
     HTTP_PORT: z.string().regex(DIGITS_ONLY).transform(Number),
+    NOTIFICATION_CHANNEL: z.enum(['http', 'sms']),
     PROJECT_DIR: z.string(),
     REDIS_URL: z.string().url().optional(),
     SINCH_URL: z.string().optional(),

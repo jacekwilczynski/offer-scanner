@@ -15,3 +15,11 @@ export function shared<F extends Factory>(factory: F) {
         return cache.get(factory) as Awaited<ReturnType<F>>;
     };
 }
+
+/**
+ * Instantiates a service immediately.
+ */
+export function eager<F extends Factory>(factory: F) {
+    factory();
+    return factory;
+}

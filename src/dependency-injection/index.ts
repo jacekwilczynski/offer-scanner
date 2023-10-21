@@ -6,8 +6,10 @@ import { AsyncEventEmitter } from 'src/utils/EventEmitter';
 import { Cache } from 'src/infrastructure/cache/Cache';
 import { CachedHttpClient } from 'src/infrastructure/http-client/CachedHttpClient';
 import { DomOverHttpSource } from 'src/application/services/offer-importer/sources/DomOverHttpSource';
+import { eager, shared } from 'src/dependency-injection/di-utils';
 import { env } from 'src/dependency-injection/env';
 import { HttpClient } from 'src/application/interfaces/HttpClient';
+import { MarkOffersAsNotifiedAboutSubscriber } from 'src/application/services/MarkOffersAsNotifiedAboutSubscriber';
 import { OfferFetcher } from 'src/application/services/offer-importer/OfferFetcher';
 import { OfferImporter } from 'src/application/services/offer-importer/OfferImporter';
 import { PrismaClient } from 'prisma/client';
@@ -16,13 +18,11 @@ import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOff
 import { RealHttpClient } from 'src/infrastructure/http-client/RealHttpClient';
 import { Refresh } from 'src/application/use-cases/Refresh';
 import { Server } from 'src/server';
-import { shared } from 'src/dependency-injection/di-utils';
 import { SinchSmsSender } from 'src/infrastructure/notifier/sms-sender/SinchSmsSender';
 import { SkipFirstNotificationNotifier } from 'src/application/services/SkipFirstNotificationNotifier';
 import { SmsNotifier } from 'src/infrastructure/notifier/SmsNotifier';
 import { StdoutFakeSmsSender } from 'src/infrastructure/notifier/sms-sender/StdoutFakeSmsSender';
 import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSmsSender';
-import { MarkOffersAsNotifiedAboutSubscriber } from 'src/application/services/MarkOffersAsNotifiedAboutSubscriber';
 
 class Container {
     cache = shared(async () => new Cache(await this.redisClient()));
@@ -42,9 +42,11 @@ class Container {
         new PrismaListingRepository(await this.prisma()),
     );
 
-    markOffersAsNotifiedAboutSubscriber = shared(async () => new MarkOffersAsNotifiedAboutSubscriber(
-        await this.eventEmitter(),
-        await this.offerRepository(),
+    markOffersAsNotifiedAboutSubscriber = eager(shared(async () =>
+        new MarkOffersAsNotifiedAboutSubscriber(
+            await this.eventEmitter(),
+            await this.offerRepository(),
+        ),
     ));
 
     notifier = shared(async () => new SkipFirstNotificationNotifier(

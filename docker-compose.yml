@@ -12,7 +12,6 @@ services:
             - "${HOST_HTTP_PORT}:${HTTP_PORT}"
         depends_on:
             - postgres
-            - redis
         command: ["tail", "-f", "/dev/null"]
 
     postgres:
@@ -23,9 +22,6 @@ services:
             - ${HOST_POSTGRES_PORT}:5432
         volumes:
             - postgres:/var/lib/postgresql/data
-
-    redis:
-        image: redis:7.2.1-alpine3.18
 
 volumes:
     postgres: ~

@@ -1,22 +1,17 @@
-import * as assert from 'assert';
 import * as config from 'src/dependency-injection/offer-sources';
-import * as redis from 'redis';
 import { AppEventEmitter } from 'src/application/EventMap';
 import { AsyncEventEmitter } from 'src/utils/EventEmitter';
 import { BufferedNotifier } from 'src/infrastructure/notifier/BufferedNotifier';
-import { Cache } from 'src/infrastructure/cache/Cache';
-import { CachedHttpClient } from 'src/infrastructure/http-client/CachedHttpClient';
 import { DomOverHttpSource } from 'src/application/services/offer-importer/sources/DomOverHttpSource';
 import { eager, shared } from 'src/dependency-injection/di-utils';
 import { env } from 'src/dependency-injection/env';
-import { HttpClient } from 'src/application/interfaces/HttpClient';
 import { MarkOffersAsNotifiedAboutSubscriber } from 'src/application/services/MarkOffersAsNotifiedAboutSubscriber';
 import { OfferFetcher } from 'src/application/services/offer-importer/OfferFetcher';
 import { OfferImporter } from 'src/application/services/offer-importer/OfferImporter';
 import { PrismaClient } from 'prisma/client';
 import { PrismaListingRepository } from 'src/infrastructure/repositories/PrismaListingRepository';
 import { PrismaOfferRepository } from 'src/infrastructure/repositories/PrismaOfferRepository';
-import { RealHttpClient } from 'src/infrastructure/http-client/RealHttpClient';
+import { FetchHttpClient } from 'src/infrastructure/http-client/FetchHttpClient';
 import { Refresh } from 'src/application/use-cases/Refresh';
 import { Server } from 'src/server';
 import { SinchSmsSender } from 'src/infrastructure/notifier/sms-sender/SinchSmsSender';
@@ -28,18 +23,9 @@ import { TwilioSmsSender } from 'src/infrastructure/notifier/sms-sender/TwilioSm
 class Container {
     bufferedNotifier = shared(async () => new BufferedNotifier());
 
-    cache = shared(async () => new Cache(await this.redisClient()));
-
     eventEmitter = shared(async () => new AsyncEventEmitter() as AppEventEmitter);
 
-    httpClient = shared(async () => {
-        let httpClient: HttpClient = new RealHttpClient();
-        if (env.HTTP_CLIENT_CACHE) {
-            httpClient = new CachedHttpClient(httpClient, await this.cache());
-        }
-
-        return httpClient;
-    });
+    httpClient = shared(async () => new FetchHttpClient());
 
     listingRepository = shared(async () =>
         new PrismaListingRepository(await this.prisma()),
@@ -77,15 +63,6 @@ class Container {
     );
 
     prisma = shared(async () => new PrismaClient());
-
-    redisClient = shared(async () => {
-        const url = env.REDIS_URL;
-        assert(url, 'REDIS_URL env var must not be empty.');
-        const client: redis.RedisClientType = redis.createClient({ url });
-        toExecuteBeforeShutdown.push(() => client.disconnect());
-
-        return client;
-    });
 
     refresh = shared(async () => new Refresh(
         await this.offerImporter(),

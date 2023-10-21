@@ -12,6 +12,7 @@
         "app:load-fixtures": "yarn ts-node -T src/load-fixtures.ts",
         "app:refresh": "yarn ts-node -T src/refresh.ts",
         "app:serve": "yarn ts-node -T src/serve.ts",
+        "app:watch": "yarn ts-node -T src/watch.ts",
         "test": "tsc && jest --runInBand"
     },
     "dependencies": {

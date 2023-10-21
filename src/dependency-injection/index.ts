@@ -38,12 +38,11 @@ class Container {
         ),
     ));
 
-    notifier = shared(async () => new SkipFirstNotificationNotifier(
+    notifier = shared(async () =>
         env.NOTIFICATION_CHANNEL === 'sms'
-            ? await this.smsNotifier()
+            ? new SkipFirstNotificationNotifier(await this.smsNotifier(), await this.offerRepository())
             : await this.bufferedNotifier(),
-        await this.offerRepository(),
-    ));
+    );
 
     offerFetcher = shared(async () => {
         const httpClient = await this.httpClient();
